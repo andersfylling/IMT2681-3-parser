@@ -2,17 +2,17 @@ package parser
 
 func hasNrOfCurrencies(c *ExchangeRate) int {
   total := 0
-  if len(c.Base) > 0 {
+  if c.Base != "" {
     total += 1
   }
-  if len(c.Target) > 0 {
+  if c.Target != "" {
     total += 1
   }
   
   return total
 }
 
-func reassureNrOfCurrencies(inputs []string, expected int) {
+func reassureNrOfCurrencies(t *testing.T, inputs []string, expected int) {
   logrus.Info("Testing with %d-currency sentences", expected)
   for _, input := range inputs {
     res, err := ParseStr(input)
@@ -29,7 +29,7 @@ func reassureNrOfCurrencies(inputs []string, expected int) {
   }
 }
 
-func TestParseStr(*testing.T) {
+func TestParseStr(t *testing.T) {
   // Valid sentences with only two currencies
   valids := []string{
     "What is the current exchange rate between Norwegian Kroner and Euro?",
@@ -54,16 +54,16 @@ func TestParseStr(*testing.T) {
 
 
   logrus.Info("Testing with valid sentences")
-  reassureNrOfCurrencies(valids, 2)
+  reassureNrOfCurrencies(t, valids, 2)
   
   logrus.Info("Testing with no-currency sentences")
-  reassureNrOfCurrencies(sentencesNone, 0)
+  reassureNrOfCurrencies(t, sentencesNone, 0)
   
   logrus.Info("Testing with one-currency sentences")
-  reassureNrOfCurrencies(sentencesOne, 1)
+  reassureNrOfCurrencies(t, sentencesOne, 1)
   
   logrus.Info("Testing with one-currency sentences")
-  reassureNrOfCurrencies(sentencesThree, 3)
+  reassureNrOfCurrencies(t, sentencesThree, 3)
   
   logrus.Info("Done")
 }
