@@ -24,14 +24,10 @@ func reassureNrOfCurrencies(t *testing.T, inputs []string, expected int) {
 			return
 		}
 		got := hasNrOfCurrencies(res)
-		if expected < 3 {
-			if err != nil {
-				t.Errorf("Got an error when expecting none. Error: %s", err.Error())
-			} else if got != expected {
-				t.Errorf("Incorrect number of detected currencies, got: %d, want: %d.", got, expected)
-			}
-		} else if err == nil {
-			t.Errorf("Did not get an error when there were more than three mentioned currencies. Error: %s", err.Error())
+		if expected == 2 && got == 2 {
+			// OK
+		} else if expected != 2 {
+			t.Errorf("Given currencies were %d, but no error was returned", expected)
 		}
 	}
 }
