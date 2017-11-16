@@ -1,7 +1,9 @@
 package parser
 
 import "testing"
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 func hasNrOfCurrencies(c *ExchangeRate) int {
 	total := 0
@@ -20,7 +22,7 @@ func reassureNrOfCurrencies(t *testing.T, inputs []string, expected int) {
 	for _, input := range inputs {
 		res, err := ParseStr(input)
 		if err != nil {
-			logrus.Fatal(err.Error())
+			logrus.Info(err.Error())
 			return
 		}
 		got := hasNrOfCurrencies(res)
@@ -51,33 +53,36 @@ func reassureBaseAndTargetFields(t *testing.T, inputs []string, expecteds []*Exc
 	}
 }
 
-// TestParseStr Should create a echangerate object per base-target pair found.
+// TestParseStr Should create a exchange rate object per base-target pair found.
 func TestParseStr(t *testing.T) {
 	// Valid sentences with only two currencies
 	valids := []string{
 		"What is the current exchange rate between Norwegian Kroner and Euro?",
 		"What is the exchange rate between USD and NOK?",
 		"What is the exchange rate between euro and norwegian kroner?",
+		"NOK and RON (Romanian leu)",
+		"What is the exchange rate between danish krone and USD",
+		"Exchange rate hkd and myr",
 	}
+	reassureNrOfCurrencies(t, valids, 2)
 
 	// Sentences which contains no currencies
 	sentencesNone := []string{
-		"What is a dinosaur?",
+		"What is a dinosaur? and tull",
 	}
+	reassureNrOfCurrencies(t, sentencesNone, 0)
 
 	// Sentences with one currency
 	sentencesOne := []string{
 		"Lol NOK",
 	}
 
+	reassureNrOfCurrencies(t, sentencesOne, 1)
+
 	// Sentences with more than two currencies
 	sentencesThree := []string{
-		"NOK, NOK, NOK",
+		"NOK,  NOK, NOK",
 	}
-
-	reassureNrOfCurrencies(t, sentencesNone, 0)
-	reassureNrOfCurrencies(t, sentencesOne, 1)
-	reassureNrOfCurrencies(t, valids, 2)
 	reassureNrOfCurrencies(t, sentencesThree, 3)
 
 	logrus.Info("Done")
@@ -86,7 +91,10 @@ func TestParseStr(t *testing.T) {
 	reassureBaseAndTargetFields(t, valids, []*ExchangeRate{
 		&ExchangeRate{Base: "NOK", Target: "EUR"},
 		&ExchangeRate{Base: "USD", Target: "NOK"},
-		&ExchangeRate{Base: "EUR", Target: "BOK"},
+		&ExchangeRate{Base: "EUR", Target: "NOK"},
+		&ExchangeRate{Base: "NOK", Target: "RON"},
+		&ExchangeRate{Base: "DKK", Target: "USD"},
+		&ExchangeRate{Base: "HKD", Target: "MYR"},
 	})
 
 }
