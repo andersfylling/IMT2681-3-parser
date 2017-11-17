@@ -1,4 +1,4 @@
-package parser
+package concurrencyparser
 
 // Ref: http://www.golangprograms.com/data-structure-and-algorithms/golang-program-for-implementation-of-rabin-karp.html
 // Rabin-Karp string search algorithm in Golang
