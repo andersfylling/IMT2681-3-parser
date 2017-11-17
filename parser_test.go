@@ -1,4 +1,4 @@
-package parser
+package concurrencyparser
 
 import "testing"
 import (
