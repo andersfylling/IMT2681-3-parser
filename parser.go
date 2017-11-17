@@ -67,8 +67,15 @@ func ParseStr(input string) (*ExchangeRate, error) {
 	}
 
 	// check for missing data
-	if res.Base == "" || res.Target == "" {
-		return res, errors.New("Could not identify it as a currency rate question")
+	if res.Base == "" && res.Target == "" {
+		return res, errors.New("Could not identify it as a currency rate question." +
+			" Hint: Your question should not contain more than two currencies, and each must be separated with 'and'")
+	} else if (res.Base != "" && res.Target == "") {
+		return res, errors.New("Could not identify your last currency")
+	} else if (res.Base == "" && res.Target != "") {
+		return res, errors.New("Could not identify your first currency")
+	} else if (res.Base == res.Target) {
+		return res, errors.New("Can not compare two of the same currency")
 	}
 
 	return res, nil
